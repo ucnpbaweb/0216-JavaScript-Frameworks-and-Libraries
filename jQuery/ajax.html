@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>jQuery events</title>
+		<script type="text/javascript" src="lib/jquery-2.2.0.js"></script>
+		<script type="text/javascript">
+			//wait for the document to load
+			$(document).ready(function(){
+				//click on any link in the document and load content into a div
+				$('a').click(function(e){
+					e.preventDefault();
+					var pagehref = $(this).attr('href');
+					$.get({
+						url: pagehref,
+						dataType: 'html',
+						success: function(data){
+							$('#content').html(data);
+						}
+					});
+				});
+
+			});
+		</script>
+	</head>
+	<body>
+		<ul>
+			<li><a href="pages/page1.html">Page 1</a></li>
+			<li><a href="pages/page2.html">Page 2</a></li>
+		</ul>
+		<div id="content"></div>
+	</body>
+</html>

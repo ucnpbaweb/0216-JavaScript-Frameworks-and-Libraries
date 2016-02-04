@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>jQuery DOM manipulation</title>
+		<script type="text/javascript" src="lib/jquery-2.2.0.js"></script>
+		<script type="text/javascript">
+			//wait for the document to load
+			$(document).ready(function(){
+				//add a new child element to #list
+				//document.getElementById('list')
+				$('#list').append(
+					$('<li>').text('The new element...')
+				);
+
+				$('#list').append(
+					$('<li>').append(
+							$('<a>').attr('href', 'page.html').text('The new element...')
+						)
+				);
+				
+				//move an element from #list to #list2
+				$('#list2').append(
+					$('#list').find('li').eq(0)
+				);
+
+				//delete an element from #list2
+				$('#list2').find('li').eq(0).remove();
+
+				//add an attribute to all ul elements
+				$('ul').attr('class', 'list');
+			});
+		</script>
+	</head>
+	<body>
+		<p>List id=list:</p>
+		<ul id="list">
+			<li>First item in list</li>
+		</ul>
+		<p>List id=list2:</p>
+		<ul id="list2">
+			<li>First item in list2</li>
+		</ul>
+	</body>
+</html>
