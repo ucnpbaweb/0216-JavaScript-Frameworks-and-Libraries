@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Notes app</title>
+		<script type="text/javascript" src="lib/jquery-2.2.0.js"></script>
+		<script type="text/javascript" src="lib/underscore.js"></script>
+		<script type="text/javascript" src="lib/backbone.js"></script>
+		<script type="text/template" id="note-template">
+			<div><em><%- title %></em>: <%- content %></div>
+		</script>
+
+		<script type="text/javascript">
+			var noteapp = {};
+
+			noteapp.Note = Backbone.Model.extend({
+				defaults: {
+					title: '',
+					content: ''
+				}
+			});
+
+			var n1 = new noteapp.Note({title:'Title...1', content:'Content...'});
+			var n2 = new noteapp.Note({title:'Title...2', content:'Content...'});
+
+			// create a collection
+			noteapp.NoteList = Backbone.Collection.extend({
+				model: noteapp.Note,
+				url: 'notes.json'
+			});
+
+			// instance of the Collection
+			noteapp.noteList = new noteapp.NoteList();
+
+			noteapp.noteList.add(n1);
+			noteapp.noteList.add(n2);
+
+			// Views
+			noteapp.NoteView = Backbone.View.extend({
+				tagName: 'li',
+				template: _.template($('#note-template').html()),
+				render: function(){
+					this.$el.html(this.template(this.model.toJSON()));
+					return this;
+				}
+			});
+
+			window.addEventListener('load', function(){
+				noteapp.AppView = Backbone.View.extend({
+					el: '#noteapp',
+					initialize: function () {
+						this.inputtitle = this.$('#new-note-title');
+						this.inputcontent = this.$('#new-note-content');
+
+						noteapp.noteList.on('add', this.addOne, this);
+						noteapp.noteList.on('reset', this.addAll, this);
+						noteapp.noteList.fetch();
+					},
+					events: {
+						'click #createNewNote': 'createNoteOnClick'
+					},
+					createNoteOnClick: function(e){
+						var note = noteapp.noteList.create(this.newAttributes());
+						console.log(this.inputtitle);
+						this.inputtitle.val('');
+						this.inputcontent.val('');
+					},
+					addOne: function(note){
+						var view = new noteapp.NoteView({model: note});
+						$('#note-list').append(view.render().el);
+					},
+					addAll: function(){
+						this.$('#note-list').html('');
+						noteapp.noteList.each(this.addOne, this);
+					},
+					newAttributes: function(){
+						return {
+							title: this.inputtitle.val().trim(),
+							content: this.inputcontent.val().trim()
+						}
+					}
+				});
+
+				var appView = new noteapp.AppView();
+
+			}, false);
+			
+		</script>
+	</head>
+	<body>
+		<div id="noteapp">
+			<ul id="note-list"></ul>
+			<input id="new-note-title" placeholder="title...">
+			<textarea id="new-note-content" placeholder="content..."></textarea>
+			<button id="createNewNote">Create new note</button>
+		</div>
+	</body>
+</html>
