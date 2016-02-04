@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html class="no-js">
+	<head>
+		<meta charset="utf-8"/>
+		<title>Flexbox</title>
+		<script type="text/javascript" src="lib/modernizr-custom.js"></script>
+		<script type="text/javascript">
+			window.addEventListener('load', function(){
+				/* if no flexbox, reorder HTML */
+				if(!Modernizr.flexbox){
+					var main = document.querySelector('body > main');
+					var aside = document.querySelector('body > aside');
+					main.outerHTML = aside.outerHTML + main.outerHTML;
+					aside.outerHTML = "";
+				}
+			}, false);
+		</script>
+		<style type="text/css">
+			body {
+				font-family: Verdana, sans-serif;
+			}
+
+			body>header, nav, main, aside {
+				border: 1px gray solid;
+				margin: .2em;
+			}
+
+			/* if flexbox */
+			.flexbox body {
+				display: flex;
+				flex-wrap: wrap;
+			}
+
+			.flexbox header {
+				display: block;
+				width: 100%;
+			}			
+
+			.flexbox nav {
+				width: 20%;
+			}
+			.flexbox main {
+				flex-grow: 1;
+			}
+			.flexbox body > aside {
+				width: 20%;
+			}
+
+			/* if no flexbox */
+
+			.no-flexbox body nav {
+				width: 20%;
+				float: left;
+			}
+
+			.no-flexbox body main {
+				margin: 0 21%;
+			}
+
+			.no-flexbox body aside {
+				width: 20%;
+				float: right;
+			}
+
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>My website</h1>
+		</header>
+		<nav>
+			<ul>
+				<li><a href="#">Home</a></li>
+				<li><a href="#">About</a></li>
+			</ul>
+		</nav>
+		<main>
+			<header>
+				<h2>Velkome to my website</h2>
+			</header>
+			<section>
+				<h2>News...</h2>
+			</section>
+		</main>
+		<aside>
+			<h2>About</h2>
+		</aside>
+	</body>
+</html>
